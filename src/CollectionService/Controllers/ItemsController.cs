@@ -1,4 +1,9 @@
+using CollectionService.Data;
+using CollectionService.Models;
+using CollectionService.Repositories;
+using CollectionService.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CollectionService.Controllers
 {
@@ -6,70 +11,88 @@ namespace CollectionService.Controllers
     [Route("[controller]")]
     public class ItemsController : ControllerBase
     {
-        private static List<ItemDto> items = new(){
-            new ItemDto(Guid.NewGuid(), "FirstItem", new string[ ]{"first","second"}, 1, DateTimeOffset.Now),
-            new ItemDto(Guid.NewGuid(), "SecondItem", new string[ ]{"third","fouth"}, 2, DateTimeOffset.Now),
-        };
+        private readonly AppDbContext _context;
+        private readonly IRepository<Item> _repository;
+
+        public ItemsController(AppDbContext context, IRepository<Item> repository)
+        {
+            _context = context;
+            _repository = repository;
+        }
 
         [HttpGet]
-        public IEnumerable<ItemDto> Get()
+        public async Task<IEnumerable<IEntity>?> GetAsync()
         {
+            //var items = await _context.Items.ToListAsync();
+          //  var items = (await _repository.GetAllItemsAsync())?.Select(p => p.AsDto());
+          var items = await _repository.GetAllItemsAsync();
             return items;  
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetByIdAsync(Guid id)
         {
-            if (!items.Any(p => p.Id == id))
+            if (!await _context.Items.AnyAsync(p => p.Id == id))
                 return NotFound();
                 
-            var item = items.Where(p => p.Id == id).FirstOrDefault();
+            var item = await _context.Items.Where(p => p.Id == id).SingleAsync();
             return Ok(item);  
         }
 
         [HttpPost]
-        public IActionResult Create(CreateItemDto createItemDto)
+        public async Task<IActionResult> CreateAsync(CreateItemDto createItemDto)
         {
-            var item = new ItemDto (
-                Guid.NewGuid(),
-                createItemDto.NameItem,
-                createItemDto.Tags,
-                createItemDto.Quantity,
-                DateTimeOffset.Now
-            );
-            items.Add(item);
-
-            return CreatedAtAction(nameof(GetById), new {id = item.Id}, item);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Update(Guid id, UpdateItemDto updateItemDto)
-        {
-             if (!items.Any(p => p.Id == id))
-                return NotFound();
-
-            var item = items.Where(p => p.Id == id).Single();
-            var updatedItem = item with
+            var tags = createItemDto.Tags;
+            foreach (var some in tags)
             {
-                NameItem = updateItemDto.NameItem,
-                Tags = updateItemDto.Tags,
-                Quantity = updateItemDto.Quantity
+                if (! await _context.Tags.AnyAsync(p => p.Name == some))
+                {
+                    var tag = new Tag{
+                        Name = some
+                    };
+                    await _context.Tags.AddAsync(tag);
+                }
+            }
+            var item = new Item{
+                Name = createItemDto.NameItem,
+                Quantity = createItemDto.Quantity,
+                CreatedDate = DateTimeOffset.Now
+
             };
-            var index = items.FindIndex(p => p.Id == id);
-            items[index] = updatedItem;
+           await _context.Items.AddAsync(item);
+           await _context.SaveChangesAsync();
 
-            return Ok();
-        }
+                return Ok(item);
+            }
 
-        [HttpDelete("{id}")]
-        public IActionResult Remove(Guid id)
-        {
-            if (!items.Any(p => p.Id == id))
-                return NotFound();
-
-            var item = items.Where(p => p.Id == id).Single();
-            items.Remove(item);
-            return Ok();
-        }
-    }
+        //  [HttpPut("{id}")]
+        //  public IActionResult Update(Guid id, UpdateItemDto updateItemDto)
+        //  {
+        //       if (!items.Any(p => p.Id == id))
+        //          return NotFound();
+    //
+        //      var item = items.Where(p => p.Id == id).Single();
+        //      var updatedItem = item with
+        //      {
+        //          NameItem = updateItemDto.NameItem,
+        //          Tags = updateItemDto.Tags,
+        //          Quantity = updateItemDto.Quantity
+      //      };
+      //      var index = items.FindIndex(p => p.Id == id);
+      //      items[index] = updatedItem;
+//
+      //      return Ok();
+      //  }
+//
+      //  [HttpDelete("{id}")]
+      //  public IActionResult Remove(Guid id)
+      //  {
+      //      if (!items.Any(p => p.Id == id))
+      //          return NotFound();
+//
+      //      var item = items.Where(p => p.Id == id).Single();
+      //      items.Remove(item);
+      //      return Ok();
+      //  }
+    }//
 }

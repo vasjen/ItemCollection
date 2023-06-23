@@ -13,6 +13,7 @@ namespace CollectionService.Data
         private readonly IConfiguration _config;
 
         public DbSet<Item> Items {get;set;}
+        public DbSet<Tag> Tags {get;set;}
         public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration config)
         : base(options)
         {
