@@ -7,20 +7,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="53b6919a-9968-4907-8762-59b23d25579d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ItemCollection.dir/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ItemCollection.dir/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ItemCollection.dir/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CollectionService/Controllers/DbCheckerController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CollectionService/Controllers/ItemsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/CollectionService/Controllers/ItemsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CollectionService/Data/AppDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/CollectionService/Data/AppDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CollectionService/Dto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/CollectionService/Dto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CollectionService/Models/Item.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/CollectionService/Models/Item.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CollectionService/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/CollectionService/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ItemCollection.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ItemCollection.dir/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/CollectionService/Controllers/ItemsController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/CollectionService/Models/IEntity.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/CollectionService/Models/Item.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/CollectionService/Repositories/ItemsRepository.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/CommonService/src/Common/Class1.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -36,16 +35,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.CollectionService: IIS Express">
     <configuration name="CollectionService: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/src/CollectionService/CollectionService.csproj" />
@@ -102,12 +101,14 @@
       <option name="presentableId" value="Default" />
       <updated>1687515137668</updated>
       <workItem from="1687515153778" duration="559000" />
+      <workItem from="1687523903853" duration="253000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
