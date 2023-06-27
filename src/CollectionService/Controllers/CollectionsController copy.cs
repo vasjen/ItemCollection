@@ -8,19 +8,19 @@ namespace CollectionService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ItemsController : ControllerBase
+    public class CollectionsController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly IRepository<Item> _repository;
+        private readonly IRepository<Collection> _repository;
 
-        public ItemsController(AppDbContext context, IRepository<Item> repository)
+        public CollectionsController(AppDbContext context, IRepository<Collection> repository)
         {
             _context = context;
             _repository = repository;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Item>> GetAsync()
+        public async Task<IEnumerable<Collection>> GetAsync()
         {
           return  await _repository.GetAllAsync();
         }
@@ -38,13 +38,7 @@ namespace CollectionService.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync(CreateItemDto createItemDto)
         {
-            
-            var item = new Item{
-                Name = createItemDto.NameItem,
-                Quantity = createItemDto.Quantity,
-                CreatedTime = DateTimeOffset.Now
-
-            };
+           var item = new Collection();
            await _repository.CreateAsync(item);
 
                 return Ok(item);

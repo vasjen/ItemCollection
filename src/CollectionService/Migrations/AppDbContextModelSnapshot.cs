@@ -28,7 +28,7 @@ namespace CollectionService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedDate")
+                    b.Property<DateTimeOffset>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
@@ -37,9 +37,6 @@ namespace CollectionService.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("TagId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 

@@ -1,17 +1,19 @@
-using CollectionService.Data;
-using CollectionService.Models;
-using CollectionService.Repositories;
+
 using Microsoft.EntityFrameworkCore;
+using CollectionService.Data;
+using CollectionService.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// builder.Services.AddCustomDbContext<AppDbContext>(builder.Configuration);
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connection = builder.Configuration.GetConnectionString("DbConnection");
-            options.UseSqlServer(connection);
+            options.UseSqlServer(connection, b =>
+                b.MigrationsAssembly("CollectionService"));
 });
 builder.Services.AddScoped(typeof(IRepository<>), typeof(ItemsRepository<>));
 

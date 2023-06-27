@@ -3,12 +3,12 @@ using CollectionService.Models.Entities;
 
 namespace  CollectionService.Models
 {
-    public class Item : IEntity
+    public class Collection : IEntity
     {
         public Guid Id { get; init; }
         public string Name { get; set; } = string.Empty;
-        public List<Tag> Tags { get; } = new();
-        public int Quantity { get; set; }
+        public List<Item> Items { get; } = new();
         public DateTimeOffset CreatedTime { get; init; }
+        public string Description { get; set; } = string.Empty;
     }
 }

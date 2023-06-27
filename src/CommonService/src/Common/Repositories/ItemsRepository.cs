@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
-using Common.Data;
-using Common.Models;
+using Common.Core.Entities;
+using Common.EFCore.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Common.Repositories

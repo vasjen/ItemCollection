@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using Common.Models;
+using Common.Core.Entities;
 
 namespace Common.Repositories
 {

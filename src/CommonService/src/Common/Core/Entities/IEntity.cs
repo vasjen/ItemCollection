@@ -1,9 +1,9 @@
-namespace  Common.Models
+namespace  Common.Core.Entities
 {
     public interface IEntity
     {
         Guid Id { get; init; }
         string Name { get; set; }
-        List<Tag> Tags { get; }
+        DateTimeOffset CreatedTime {get;init;}
     }
 }
