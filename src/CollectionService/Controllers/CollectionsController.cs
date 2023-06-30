@@ -28,20 +28,27 @@ namespace CollectionService.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
-            if (!await _context.Items.AnyAsync(p => p.Id == id))
+
+            var collection = await _repository.GetByIdAsync(id);
+            if (collection is null)
                 return NotFound();
                 
-            var item = await _context.Items.Where(p => p.Id == id).SingleAsync();
-            return Ok(item);  
+            return Ok(collection);  
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CreateItemDto createItemDto)
+        public async Task<IActionResult> CreateAsync(CreateCollectionDto createCollectionDto)
         {
-           var item = new Collection();
-           await _repository.CreateAsync(item);
+            var theme = createCollectionDto.Theme;
+            var collection = new Collection(){
+                CreatedTime = DateTimeOffset.Now,
+                Name = createCollectionDto.NameCollection,
+                Description = createCollectionDto.Description,
+                Theme = theme,
+           };
+           await _repository.CreateAsync(collection);
 
-                return Ok(item);
+                return Ok(collection);
             }
 
         [HttpPut("{id}")]

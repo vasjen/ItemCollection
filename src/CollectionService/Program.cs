@@ -2,12 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using CollectionService.Data;
 using CollectionService.Repositories;
+using CollectionService.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// builder.Services.AddIdentity();
 // builder.Services.AddCustomDbContext<AppDbContext>(builder.Configuration);
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -16,7 +19,19 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                 b.MigrationsAssembly("CollectionService"));
 });
 builder.Services.AddScoped(typeof(IRepository<>), typeof(ItemsRepository<>));
-
+builder.Services.AddScoped(typeof(IUsersRepository<>), typeof(UsersRepository<>));
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 1;
+    options.Password.RequiredUniqueChars = 0;
+    options.User.RequireUniqueEmail = true;
+});
 
 var app = builder.Build();
 

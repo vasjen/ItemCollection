@@ -1,10 +1,12 @@
+using CollectionService.Models.Entities;
+
 namespace  CollectionService.Models
 {
-    public class Tag 
+    public class Tag : IEntity
     {
         public Guid Id {get;init;}
         public string Name {get;set;} = string.Empty;
-        public List<Item> Items { get; } = new();
-
+        public DateTimeOffset CreatedTime {get;init;} = DateTimeOffset.Now;
+        
     }
 }

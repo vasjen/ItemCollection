@@ -8,7 +8,9 @@ namespace  CollectionService.Models
         public Guid Id { get; init; }
         public string Name { get; set; } = string.Empty;
         public List<Tag> Tags { get; } = new();
-        public int Quantity { get; set; }
+        public List<Comment> Comments {get;} = new List<Comment>();
         public DateTimeOffset CreatedTime { get; init; }
+        public Guid ApplicationUserId {get;set;}
+        public ApplicationUser User {get;set;}
     }
 }
