@@ -23,7 +23,7 @@ namespace CollectionService.Repositories
             =>  await _context.Set<T>().AsNoTracking().Where(filter).ToListAsync();
     
         public async Task<T> GetByIdAsync(Guid id)
-            => await _context.Set<T>().AsNoTracking().Where(p => p.Id == id).SingleAsync();
+            => await _context.Set<T>().AsNoTracking().Where(p => p.Id == id).SingleOrDefaultAsync();
 
         public async Task CreateAsync(T entity)
         {

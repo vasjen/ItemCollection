@@ -24,11 +24,16 @@ namespace CollectionService.Controllers
         {
           return  await _repository.GetAllAsync();
         }
+        [HttpGet("[action]/{id}")]
+        public async Task<IEnumerable<Collection>> GetAllUserAsync(Guid id)
+        {
+          return  await _repository.GetAllAsync(p => p.ApplicationUserId == id);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
-
+            System.Console.WriteLine("Recivied id is {0}",id);
             var collection = await _repository.GetByIdAsync(id);
             if (collection is null)
                 return NotFound();

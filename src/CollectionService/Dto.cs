@@ -13,7 +13,8 @@ namespace CollectionService
     public record CreateCollectionDto([Required]string NameCollection,[Required] string Description, Theme Theme, IEnumerable<ItemDto> Items);
     public record UpdateCollectionDto([Required]string NameCollection,[Required] string Description, Theme Theme, IEnumerable<ItemDto> Items);
 
-    public record CommentDto(string CommentText, DateTimeOffset AddedDate);
+    public record CommentDto(string CommentText, DateTimeOffset AddedDate, string Author);
+    public record CreateCommentDto(string CommentText);
 
 
 

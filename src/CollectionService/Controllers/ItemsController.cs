@@ -4,6 +4,7 @@ using CollectionService.Data;
 using CollectionService.Models;
 using CollectionService.Repositories;
 using CollectionService.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CollectionService.Controllers
 {
@@ -40,8 +41,10 @@ namespace CollectionService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateAsync(CreateItemDto createItemDto)
         {
+            
             var user = await _usersRepository.GetUserAsync("asd");
             List<Tag> tags = new List<Tag>();
             foreach (var entity in createItemDto.Tags)

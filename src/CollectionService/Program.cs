@@ -4,6 +4,10 @@ using CollectionService.Data;
 using CollectionService.Repositories;
 using CollectionService.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using CollectionService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +23,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                 b.MigrationsAssembly("CollectionService"));
 });
 builder.Services.AddScoped(typeof(IRepository<>), typeof(ItemsRepository<>));
+builder.Services.AddScoped<ITokenCreationService, JwtService>();
 builder.Services.AddScoped(typeof(IUsersRepository<>), typeof(UsersRepository<>));
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<AppDbContext>();
@@ -32,6 +37,26 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 0;
     options.User.RequireUniqueEmail = true;
 });
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer =  builder.Configuration["Jwt:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+            )
+        };
+        
+    });
 
 var app = builder.Build();
 

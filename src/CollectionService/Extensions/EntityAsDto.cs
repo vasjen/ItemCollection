@@ -8,7 +8,6 @@ namespace CollectionService.Extensions
     {
         public static ItemDto AsDto(this Item item)
         {
-            
             return new ItemDto(item.Id, item.Name, item.CreatedTime);
         }
         public static CollectionDto AsDto(this Collection collection)
@@ -22,7 +21,7 @@ namespace CollectionService.Extensions
         }
         public static CommentDto AsDto(this Comment comment)
         {
-            return new CommentDto(comment.Name, comment.CreatedTime);
+            return new CommentDto(comment.Name, comment.CreatedTime, comment.User?.UserName!);
         }
     
     }

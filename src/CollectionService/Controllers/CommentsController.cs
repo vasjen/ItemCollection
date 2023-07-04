@@ -41,7 +41,7 @@ namespace CollectionService.Controllers
             return Ok(comment.AsDto());  
         }
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CommentDto commentDto)
+        public async Task<IActionResult> CreateAsync(CreateCommentDto commentDto)
         {
 
            // var user = await _userRepository.GetByNameAsync(HttpContext.User.Identity.Name);
