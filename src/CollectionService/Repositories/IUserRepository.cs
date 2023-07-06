@@ -1,4 +1,5 @@
-using CollectionService.Models.Authentication;
+
+using Common.Core.Entities.Authentication;
 using Microsoft.AspNetCore.Identity;
 
 namespace CollectionService.Repositories

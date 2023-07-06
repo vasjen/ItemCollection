@@ -1,5 +1,4 @@
 using CollectionService.Models;
-using CollectionService.Models.Entities;
 
 namespace  CollectionService.Models
 {

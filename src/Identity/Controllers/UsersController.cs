@@ -9,7 +9,7 @@ using CollectionService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Common.Core.Entities.Authentication;
 
-namespace CollectionService.Controllers
+namespace Identity.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]

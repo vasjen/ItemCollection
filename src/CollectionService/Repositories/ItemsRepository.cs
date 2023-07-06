@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using CollectionService.Data;
-using CollectionService.Models.Entities;
+using Common.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CollectionService.Repositories

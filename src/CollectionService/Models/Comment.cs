@@ -1,5 +1,5 @@
 using CollectionService.Models;
-using CollectionService.Models.Entities;
+using Common.Core.Entities;
 
 namespace  CollectionService.Models
 {

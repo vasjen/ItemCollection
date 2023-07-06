@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using CollectionService.Models.Entities;
+using Common.Core.Entities;
 
 namespace CollectionService.Repositories
 {
