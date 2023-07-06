@@ -25,18 +25,30 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped(typeof(IRepository<>), typeof(ItemsRepository<>));
 builder.Services.AddScoped<ITokenCreationService, JwtService>();
 builder.Services.AddScoped(typeof(IUsersRepository<>), typeof(UsersRepository<>));
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<AppDbContext>();
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 1;
-    options.Password.RequiredUniqueChars = 0;
-    options.User.RequireUniqueEmail = true;
-});
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 1;
+        options.Password.RequiredUniqueChars = 0;
+
+        options.User.RequireUniqueEmail = true;
+    })
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders()
+    .AddSignInManager<SignInManager<ApplicationUser>>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+    {
+        options.Cookie.Name = "test";
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromHours(24); 
+        options.SlidingExpiration = true;
+    });
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -68,7 +80,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

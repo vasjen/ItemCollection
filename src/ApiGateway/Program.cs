@@ -3,15 +3,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddHttpClient("CollectionService", httpClient =>
-{
-    httpClient.BaseAddress = new Uri(builder.Configuration["CollectionService"]);
-});
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("customPolicy", policy =>
+            policy.RequireAuthenticatedUser());
+    });
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("Yarp"));
+    
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         
@@ -28,24 +28,17 @@ builder.Services
             )
         };
         
-    });
+    });;
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-    {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
+app.MapGet("/", () => "Hello World!");
 app.UseRouting();
 
-app.UseAuthorization();
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-app.MapRazorPages();
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapReverseProxy();
+    });
 
 app.Run();

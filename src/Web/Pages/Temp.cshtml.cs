@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Common.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -18,9 +19,14 @@ public class TempModel : PageModel
     }
 
     public async Task<IActionResult> OnGet()
-{
+    {
     var httpClient = _httpClientFactory.CreateClient("CollectionService");
-
+    if (User.Identity.IsAuthenticated)
+        {
+            System.Console.WriteLine("Miracle");
+            _logger.LogWarning($"{User.Identity.Name}");}
+    else
+    System.Console.WriteLine("Non authorize");
     //var response = await httpClient.GetAsync("items");
     //if (response.IsSuccessStatusCode)
     //{
@@ -45,10 +51,7 @@ public class TempModel : PageModel
     var jsonstring = await response.Content.ReadAsStringAsync();
     _logger.LogInformation(jsonstring + " " +DateTimeOffset.Now);
 
-
-
-
     return Page();
-}
+    }
 }
 

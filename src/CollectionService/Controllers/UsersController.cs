@@ -78,7 +78,7 @@ namespace CollectionService.Controllers
             return BadRequest("Bad credentials");
         }
     
-        var isPasswordValid = await _usersRepository.Login(user, request.Password);
+        var isPasswordValid = await _usersRepository.ValidateCredentials(user, request.Password);
     
         if (!isPasswordValid)
         {
@@ -87,7 +87,14 @@ namespace CollectionService.Controllers
 
         var token =  _usersRepository.CreateToken(user);
         return Ok(token);
-}   
+        }       
+        [HttpPost("[action]")]
+        public async Task LoginToSiteAsync([FromForm] AuthenticationRequest request)
+        {
+            var user = await _usersRepository.GetUserAsync(request.UserName);
+
+            await _usersRepository.SignIn(user);
+        }
     
         //[HttpPut("{id}")]
         //public async Task<IActionResult> UpdateAsync(Guid id, UpdateItemDto updateItemDto)

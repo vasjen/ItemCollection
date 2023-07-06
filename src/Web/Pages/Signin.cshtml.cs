@@ -36,6 +36,7 @@ public class SigninModel : PageModel
                 {
                     var token = tokenValues.FirstOrDefault();
                     httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                    HttpContext.Session.SetString("AccessToken", token);
                 
                 }
                     return Redirect("/Temp");

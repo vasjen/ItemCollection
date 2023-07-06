@@ -10,13 +10,13 @@ namespace CollectionService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ItemsController : ControllerBase
+    public class ItemController : ControllerBase
     {
         private readonly IRepository<Item> _itemsRepository;
         private readonly IRepository<Tag> _tagsRepository;
         private readonly IUsersRepository<ApplicationUser> _usersRepository;
 
-        public ItemsController(IRepository<Item> itemsRepository, IRepository<Tag> tagsRepository, IUsersRepository<ApplicationUser> usersRepository)
+        public ItemController(IRepository<Item> itemsRepository, IRepository<Tag> tagsRepository, IUsersRepository<ApplicationUser> usersRepository)
         {
             _itemsRepository = itemsRepository;
             _tagsRepository = tagsRepository;

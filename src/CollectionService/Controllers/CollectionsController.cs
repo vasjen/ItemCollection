@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CollectionService.Data;
 using CollectionService.Models;
 using CollectionService.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CollectionService.Controllers
 {
@@ -18,10 +19,11 @@ namespace CollectionService.Controllers
             _context = context;
             _repository = repository;
         }
-
         [HttpGet]
+        [Authorize]
         public async Task<IEnumerable<Collection>> GetAsync()
         {
+            System.Console.WriteLine("Request recevied from {0}",HttpContext.User?.Identity?.Name);
           return  await _repository.GetAllAsync();
         }
         [HttpGet("[action]/{id}")]

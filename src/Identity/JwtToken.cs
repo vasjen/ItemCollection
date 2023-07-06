@@ -1,69 +1,22 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
-using CollectionService.Data;
-using CollectionService.Models.Authentication;
-using CollectionService.Models.Entities;
+using Common.Core.Entities.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CollectionService.Repositories
+namespace Identity
 {
-    
-
-    public class UsersRepository<T> : IUsersRepository<T> 
-        where T : IdentityUser<Guid>
+    public class JwtToken<T> where T: IdentityUser<Guid>
     {
+
         private const int EXPIRATION_MINUTES = 5000;
-        private readonly UserManager<T> _manager;
         private readonly IConfiguration _configuration;
-        private readonly SignInManager<T> _signInManager;
 
-        public UsersRepository(UserManager<T> manager, IConfiguration configuration, SignInManager<T> signInManager)
+        public JwtToken(IConfiguration configuration)
         {
-            _manager = manager;
             _configuration = configuration;
-            _signInManager = signInManager;
         }
-
-        public async Task<T> GetUserAsync(Guid id)
-            => await _manager.FindByIdAsync(id.ToString());
-
-        public async Task<T> GetUserAsync(string userName)
-            => await _manager.FindByNameAsync(userName);
-
-
-        public async Task CreateAsync(T user, string pass)
-        {
-            if (user == null)
-                throw new ArgumentNullException($"{nameof(user)} cann't be a null");
-
-            await _manager.CreateAsync(user, pass);
-        }
-
-        public async Task RemoveAsync(Guid id)
-        {
-            var user = await _manager.FindByIdAsync(id.ToString());
-            if (user == null)
-                throw new NullReferenceException($"{nameof(user)} cann't be a null");
-
-            _manager.DeleteAsync(user);
-        }
-
-        public async Task UpdateAsync(Guid id)
-        {
-            var user = await _manager.FindByIdAsync(id.ToString());
-            if (user == null)
-                throw new NullReferenceException($"{nameof(user)} cann't be a null");
-
-            await _manager.UpdateAsync(user);
-        }
-
-        public async Task<bool> ValidateCredentials(T user, string password)
-            => await _manager.CheckPasswordAsync(user, password);
-
         public AuthenticationResponse CreateToken(T user)
         {
              var expiration = DateTime.UtcNow.AddMinutes(EXPIRATION_MINUTES);
@@ -108,9 +61,5 @@ namespace CollectionService.Repositories
                 SecurityAlgorithms.HmacSha256
             );
 
-        public async Task SignIn(T user)
-        {
-             await _signInManager.SignInAsync(user,true);
-        }
     }
 }
