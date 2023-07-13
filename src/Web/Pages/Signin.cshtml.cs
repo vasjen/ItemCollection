@@ -28,25 +28,51 @@ public class SigninModel : PageModel
             { "Password", request["Password"] }
         };
         var content = new FormUrlEncodedContent(user);
-        var response = await httpClient.PostAsync("users/createbearertoken/login", content);
-        _logger.LogInformation(await response.Content.ReadAsStringAsync());
-           if (response.IsSuccessStatusCode)
-            {
-                if (response.Headers.TryGetValues("Token", out var tokenValues))
-                {
-                    var token = tokenValues.FirstOrDefault();
-                    httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                    HttpContext.Session.SetString("AccessToken", token);
-                
-                }
-                    return Redirect("/Temp");
-            }
-            else
-            {
-                var errorMessage = await response.Content.ReadAsStringAsync();
-                ViewData["ErrorMessage"] = errorMessage;
-                return Page();
-            }
+        var response = await httpClient.PostAsync("identity/user/login", content);
+        if (response.IsSuccessStatusCode)
+        {
+            System.Console.WriteLine("\n\n Response: \n\n");
+            var ans = response.Content;
+            System.Console.WriteLine(await ans.ReadAsStringAsync());
+            return Redirect("/Temp");
+        }
+        else
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            ViewData["ErrorMessage"] = errorMessage;
+            return Page();
+        }
+
     }
+    //public async Task<IActionResult> OnPost()
+    //{
+    //    var request = HttpContext.Request.Form;
+    //    var httpClient = _httpClientFactory.CreateClient("CollectionService");
+    //    var user = new Dictionary<string, string>
+    //    {
+    //        { "UserName", request["UserName"] },
+    //        { "Password", request["Password"] }
+    //    };
+    //    var content = new FormUrlEncodedContent(user);
+    //    var response = await httpClient.PostAsync("users/createbearertoken/login", content);
+    //    _logger.LogInformation(await response.Content.ReadAsStringAsync());
+    //       if (response.IsSuccessStatusCode)
+    //        {
+    //            if (response.Headers.TryGetValues("Token", out var tokenValues))
+    //            {
+    //                var token = tokenValues.FirstOrDefault();
+    //                httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+    //                HttpContext.Session.SetString("AccessToken", token);
+    //            
+    //            }
+    //                return Redirect("/Temp");
+    //        }
+    //        else
+    //        {
+    //            var errorMessage = await response.Content.ReadAsStringAsync();
+    //            ViewData["ErrorMessage"] = errorMessage;
+    //            return Page();
+    //        }
+    //}
 }
 

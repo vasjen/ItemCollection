@@ -1,34 +1,46 @@
 using System.Text;
+using Common.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.IdentityModel.Tokens;
+using Web.Data;
+using static IdentityModel.OidcConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizePage("/Temp");
+});
 builder.Services.AddHttpClient("CollectionService", httpClient =>
 {
     httpClient.BaseAddress = new Uri(builder.Configuration["CollectionService"]);
 });
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+builder.Services.AddAuthentication(config =>
+{
+    config.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = "oidc";
+})
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
-        
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            ValidIssuer =  builder.Configuration["Jwt:Issuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
-            )
-        };
-        
+        options.Cookie.Name = "appcookie";
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+    })
+    .AddOpenIdConnect("oidc", config =>
+    {
+        config.Authority = "http://localhost:10000";
+        config.ClientId = "client_web_id";
+        config.ClientSecret = "client_secret_web";
+        config.SaveTokens = true;
+        config.RequireHttpsMetadata = false;
+
+        config.ResponseType = "code";
     });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,9 +53,14 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    HttpOnly = HttpOnlyPolicy.Always,
+    MinimumSameSitePolicy = SameSiteMode.None,
+    Secure = CookieSecurePolicy.Always
+});
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

@@ -14,15 +14,15 @@ namespace CollectionService.Controllers
     {
         private readonly IRepository<Item> _itemsRepository;
         private readonly IRepository<Tag> _tagsRepository;
-        private readonly IUsersRepository<ApplicationUser> _usersRepository;
+        // private readonly IUsersRepository<ApplicationUser> _usersRepository;
 
-        public ItemController(IRepository<Item> itemsRepository, IRepository<Tag> tagsRepository, IUsersRepository<ApplicationUser> usersRepository)
+        public ItemController(IRepository<Item> itemsRepository, IRepository<Tag> tagsRepository)
         {
             _itemsRepository = itemsRepository;
             _tagsRepository = tagsRepository;
-            _usersRepository = usersRepository;
+            // _usersRepository = usersRepository;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
@@ -44,25 +44,25 @@ namespace CollectionService.Controllers
         [Authorize]
         public async Task<IActionResult> CreateAsync(CreateItemDto createItemDto)
         {
-            
-            var user = await _usersRepository.GetUserAsync("asd");
-            List<Tag> tags = new List<Tag>();
-            foreach (var entity in createItemDto.Tags)
-            {
-                tags.Add(
-                    new Tag{
-                        Name = entity
-                    });  
-            }
-            var item = new Item{
-                Name = createItemDto.NameItem,
-                CreatedTime = DateTimeOffset.Now,
-                ApplicationUserId = user.Id
-            };
-            item.Tags.AddRange(tags);
-           await _itemsRepository.CreateAsync(item);
+           // 
+           // var user = await _usersRepository.GetUserAsync("asd");
+           // List<Tag> tags = new List<Tag>();
+           // foreach (var entity in createItemDto.Tags)
+           // {
+           //     tags.Add(
+           //         new Tag{
+           //             Name = entity
+           //         });  
+           // }
+           // var item = new Item{
+           //     Name = createItemDto.NameItem,
+           //     CreatedTime = DateTimeOffset.Now,
+           //     ApplicationUserId = user.Id
+           // };
+           // item.Tags.AddRange(tags);
+           //await _itemsRepository.CreateAsync(item);
 
-                return Ok(item);
+                return Ok();
             }
 
         [HttpPut("{id}")]

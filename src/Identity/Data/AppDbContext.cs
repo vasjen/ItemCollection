@@ -25,7 +25,11 @@ namespace Identity.Data
         {
             base.OnModelCreating(modelBuilder);
                 
-            
+            //  modelBuilder.Entity<Comment>()
+            //  .HasOne(c => c.Item)
+            //  .WithMany(i => i.Comments)
+            //  .HasForeignKey(c => c.ItemId)
+            //  .OnDelete(DeleteBehavior.Restrict);
                         
         }
 }

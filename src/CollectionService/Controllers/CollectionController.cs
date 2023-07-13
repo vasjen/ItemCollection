@@ -9,18 +9,22 @@ namespace CollectionService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CollectionsController : ControllerBase
+    public class CollectionController : ControllerBase
     {
         private readonly AppDbContext _context;
         private readonly IRepository<Collection> _repository;
 
-        public CollectionsController(AppDbContext context, IRepository<Collection> repository)
+        public CollectionController(AppDbContext context, IRepository<Collection> repository)
         {
             _context = context;
             _repository = repository;
         }
-        [HttpGet]
         [Authorize]
+        [HttpGet]
+        [Route("[action]")]
+        public string GetTest() =>  "test!";
+    
+        [HttpGet]
         public async Task<IEnumerable<Collection>> GetAsync()
         {
             System.Console.WriteLine("Request recevied from {0}",HttpContext.User?.Identity?.Name);
