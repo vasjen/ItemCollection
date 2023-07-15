@@ -5,8 +5,12 @@
     Layout = "_LayoutApp";
 }
 <h1>@ViewData["Title"]</h1>
-<h1>@ViewData["Message"]</h1>
-@User.Identity.Name 
 
+
+@foreach (var item in User.Claims)
+{
+    <h8>@item.Type - @item.Value</h8>
+    <br>
+}
 
 <p>Use this page to detail your site's privacy policy.</p>

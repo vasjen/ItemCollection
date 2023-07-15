@@ -3,6 +3,10 @@ using Common.Models;
 using Common.Repositories;
 using Common.Core.Entities.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Duende.IdentityServer.Services;
 
 namespace Identity.Controllers
 {
@@ -12,11 +16,17 @@ namespace Identity.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IIdentityServerInteractionService _interactionService;
 
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AuthController(
+            UserManager<ApplicationUser> userManager, 
+            SignInManager<ApplicationUser> signInManager,
+            IIdentityServerInteractionService interactionService
+        )
         {
             _userManager = userManager;   
             _signInManager = signInManager;
+            _interactionService = interactionService;
         }
         [HttpGet("[action]")]
         public async Task<IActionResult> Login(string ReturnUrl)
@@ -57,6 +67,23 @@ namespace Identity.Controllers
             return View(request);
 
         }
+
+        [Route("[action]")]
+        public async Task<IActionResult> Logout(string logoutId)
+        {
+            await _signInManager.SignOutAsync();
+            var logoutResult = await _interactionService.GetLogoutContextAsync(logoutId);
+            if (String.IsNullOrEmpty(logoutResult.PostLogoutRedirectUri))
+            {
+                return RedirectToPage("Index");
+            }
+
+            return Redirect(logoutResult.PostLogoutRedirectUri);
+        }
+
+
+
+
     
      
 }

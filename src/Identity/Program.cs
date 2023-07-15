@@ -27,15 +27,19 @@ builder.Services
             .AddEntityFrameworkStores<AppDbContext>()
             .AddSignInManager<SignInManager<ApplicationUser>>();;
 // Add services to the container.
-builder.Services.AddIdentityServer(options =>
+builder.Services.ConfigureApplicationCookie(config =>
 {
-    options.UserInteraction.LoginUrl = "/Auth/Login";
-})
+    config.LoginPath = "/Auth/Login";
+    config.LogoutPath = "/Auth/Logout";
+    
+});
+builder.Services.AddIdentityServer()
     .AddAspNetIdentity<ApplicationUser>()
     .AddInMemoryClients(Configuration.GetClients())
     .AddInMemoryApiScopes(Configuration.GetApiScopes())
     .AddInMemoryApiResources(Configuration.GetApiResources())
     .AddInMemoryIdentityResources(Configuration.GetIdentityResources())
+    .AddProfileService<ProfileService>()
     .AddDeveloperSigningCredential();
 builder.Services.AddControllersWithViews();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

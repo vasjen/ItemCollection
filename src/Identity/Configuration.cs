@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using IdentityModel;
@@ -37,7 +38,13 @@ namespace Identity
                         IdentityServerConstants.StandardScopes.Profile
                     },
                     RequireConsent = false,
-                    RedirectUris = {"http://localhost:5026/signin-oidc"}
+                    RedirectUris = {"http://localhost:5026/signin-oidc"},
+                    PostLogoutRedirectUris = { "http://localhost:5026/signout-callback-oidc" },
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    AlwaysSendClientClaims = true,
+                    
+                    
+                    
                 }
             };
       

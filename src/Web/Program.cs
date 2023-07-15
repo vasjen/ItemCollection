@@ -1,7 +1,11 @@
+using System.Security.Claims;
 using System.Text;
 using Common.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.IdentityModel.Tokens;
 using Web.Data;
@@ -12,7 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages(options =>
 {
-    options.Conventions.AuthorizePage("/Temp");
+    options.Conventions.AuthorizeFolder("/Personal");
+    options.Conventions.AuthorizeFolder("/Admin","admin");
+    
 });
 builder.Services.AddHttpClient("CollectionService", httpClient =>
 {
@@ -21,7 +27,7 @@ builder.Services.AddHttpClient("CollectionService", httpClient =>
 builder.Services.AddAuthentication(config =>
 {
     config.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    config.DefaultChallengeScheme = "oidc";
+    config.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
 })
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
@@ -29,17 +35,27 @@ builder.Services.AddAuthentication(config =>
         options.Cookie.SameSite = SameSiteMode.None;
         options.Cookie.SecurePolicy = CookieSecurePolicy.None;
     })
-    .AddOpenIdConnect("oidc", config =>
+    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, config =>
     {
-        config.Authority = "http://localhost:10000";
+        
+        config.Authority = "https://localhost:7195";
         config.ClientId = "client_web_id";
         config.ClientSecret = "client_secret_web";
         config.SaveTokens = true;
         config.RequireHttpsMetadata = false;
 
         config.ResponseType = "code";
-    });
+        config.GetClaimsFromUserInfoEndpoint = true;
+        config.ClaimActions.MapAll();
 
+        
+        
+    });
+builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("admin", policy =>
+            policy.RequireClaim(ClaimTypes.Role, "Administrator"));
+    });
 
 var app = builder.Build();
 
@@ -64,5 +80,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
-
 app.Run();

@@ -12,15 +12,15 @@ namespace Identity
 
             var user =  new ApplicationUser
             {
-                UserName = "vast",
-                Email = "vast@gmail.com"
+                UserName = "test",
+                Email = "test@gmail.com"
 
             };
             var result =  userManager.CreateAsync(user, "password").GetAwaiter().GetResult();
             if (result.Succeeded)
             {
                 System.Console.WriteLine("Created!!!!!");
-                 userManager.AddClaimAsync(user, new System.Security.Claims.Claim(ClaimTypes.Role, "Administrator")).GetAwaiter().GetResult();
+                 userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Administrator")).GetAwaiter().GetResult();
             }
             else{
                 System.Console.WriteLine("Not created!");

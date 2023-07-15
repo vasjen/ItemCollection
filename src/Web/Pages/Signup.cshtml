@@ -118,7 +118,8 @@
                 </div>
               </div>
               <div class="card-body">
-                <form role="form" class="text-start" method="post" action="/User/Create">
+                <form role="form" class="text-start" method="post">
+                   <label class="form-label text-primary text-gradient font-weight-bold">@ViewData["ErrorMessage"]</label>
                   <div class="input-group input-group-outline mb-3">
                       <label class="form-label">Username</label>
                       <input type="text" class="form-control" name="UserName">
