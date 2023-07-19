@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Common.EFCore;
 
+using Common.Core.Entities;
 using Common.Repositories;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +27,7 @@ public static class Extensions
         services.AddScoped(typeof(IRepository<>), typeof(ItemsRepository<>));
         return services;
     }
+
 
 
    

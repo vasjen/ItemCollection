@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CollectionService.Data;
-using CollectionService.Models;
-using CollectionService.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Common.Core.Entities;
+using Microsoft.AspNetCore.Identity;
+using CollectionService.Extensions;
+using Common.Models;
+using Common.Repositories;
+using Common.EFCore;
 
 namespace CollectionService.Controllers
 {
@@ -11,35 +14,38 @@ namespace CollectionService.Controllers
     [Route("[controller]")]
     public class CollectionController : ControllerBase
     {
-        private readonly AppDbContext _context;
+       
         private readonly IRepository<Collection> _repository;
+        private readonly ILogger<CollectionController> _logger;
+        private readonly FieldCreationService _fieldCreator;
 
-        public CollectionController(AppDbContext context, IRepository<Collection> repository)
+        public CollectionController(IRepository<Collection> repository, ILogger<CollectionController> logger, FieldCreationService fieldCreator)
         {
-            _context = context;
             _repository = repository;
+            _logger = logger;
+            _fieldCreator = fieldCreator;
         }
-        [Authorize]
-        [HttpGet]
-        [Route("[action]")]
-        public string GetTest() =>  "test!";
+        
     
+
+        
+
         [HttpGet]
-        public async Task<IEnumerable<Collection>> GetAsync()
+        public async Task<IActionResult> GetAsync()
         {
-            System.Console.WriteLine("Request recevied from {0}",HttpContext.User?.Identity?.Name);
-          return  await _repository.GetAllAsync();
+            
+          return  Ok( _repository.GetAllAsync().GetAwaiter().GetResult().Select(p => p.AsDto()));
         }
         [HttpGet("[action]/{id}")]
         public async Task<IEnumerable<Collection>> GetAllUserAsync(Guid id)
         {
           return  await _repository.GetAllAsync(p => p.ApplicationUserId == id);
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
-            System.Console.WriteLine("Recivied id is {0}",id);
+           
             var collection = await _repository.GetByIdAsync(id);
             if (collection is null)
                 return NotFound();
@@ -48,17 +54,23 @@ namespace CollectionService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateAsync(CreateCollectionDto createCollectionDto)
         {
+            System.Console.WriteLine($"Collection: {createCollectionDto.ApplicationUserId} => {createCollectionDto.Theme} {createCollectionDto.Theme}");
             var theme = createCollectionDto.Theme;
             var collection = new Collection(){
                 CreatedTime = DateTimeOffset.Now,
                 Name = createCollectionDto.NameCollection,
                 Description = createCollectionDto.Description,
-                Theme = theme,
+                Theme = createCollectionDto.Theme,
+                ApplicationUserId = createCollectionDto.ApplicationUserId
            };
            await _repository.CreateAsync(collection);
-
+           var collectionId = collection.Id;
+            
+                await _fieldCreator.CreateField(createCollectionDto.Fields, collectionId);
+            
                 return Ok(collection);
             }
 

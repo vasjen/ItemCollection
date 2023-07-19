@@ -10,7 +10,7 @@ namespace  Common.Models
         public List<Tag> Tags { get; } = new();
         public List<Comment> Comments {get;} = new List<Comment>();
         public DateTimeOffset CreatedTime { get; init; }
-        public Guid ApplicationUserId {get;set;}
-        public ApplicationUser User {get;set;}
-    }
+        public Guid CollectionId {get;set;}
+        public Collection Collection {get;set;}
+        }
 }

@@ -12,6 +12,7 @@ namespace  Common.Models
         public string Description { get; set; } = string.Empty;
         public Guid ApplicationUserId {get;set;}
         public ApplicationUser User {get;set;}
+        public Fields? Fields {get;set;}
     }
 
     public enum Theme 

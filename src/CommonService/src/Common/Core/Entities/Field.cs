@@ -2,13 +2,13 @@
 
 namespace  Common.Models
 {
-    public class Field 
+    public abstract class Field 
     {
-        public int Id { get; init; }
+        public long Id { get; init; }
         public string Name { get; set; } = string.Empty;
-        public FieldType Type {get;set;}
+        public long? FieldsId { get; set; } 
+        public Fields? Fields { get; set; } = null!;
     }
 
-    public enum FieldType 
-    {Integer,String,MultilineText,Boolean,Date}
+   
 }

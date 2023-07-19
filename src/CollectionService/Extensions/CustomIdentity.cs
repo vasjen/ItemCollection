@@ -1,8 +1,8 @@
 
 
 using System.Text;
-using CollectionService.Data;
-using CollectionService.Models;
+using Common.EFCore;
+using Common.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -66,7 +66,7 @@ namespace CollectionService.Extensions
             Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
-                options.Authority = "http://localhost:10000";
+                options.Authority = "https://localhost:7195";
                 options.Audience = "CollectionApi";
                 options.RequireHttpsMetadata = false;
             });

@@ -1,27 +1,21 @@
 
 using Microsoft.EntityFrameworkCore;
-using CollectionService.Data;
-using CollectionService.Repositories;
-using CollectionService.Services;
 using CollectionService.Extensions;
+using CollectionService;
+using Common.Repositories;
+using Common.EFCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    var connection = builder.Configuration.GetConnectionString("DbConnection");
-            options.UseSqlServer(connection, b =>
-                b.MigrationsAssembly("CollectionService"));
-});
+builder.Services.AddDbContext<AppDbContext>();
 builder.Services.AddCustomAuth();
-builder.Services.AddScoped(typeof(IRepository<>), typeof(ItemsRepository<>));
-//builder.Services.AddScoped<ITokenCreationService, JwtService>();
-//builder.Services.AddScoped(typeof(IUsersRepository<>), typeof(UsersRepository<>));
-// builder.Services.AddOldIdentity(builder.Configuration);
 
+builder.Services.AddScoped(typeof(IFieldRepository<>),typeof(FieldsRepository<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(ItemsRepository<>));
+builder.Services.AddScoped<FieldCreationService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -23,6 +23,7 @@ builder.Services.AddRazorPages(options =>
 builder.Services.AddHttpClient("CollectionService", httpClient =>
 {
     httpClient.BaseAddress = new Uri(builder.Configuration["CollectionService"]);
+    
 });
 builder.Services.AddAuthentication(config =>
 {

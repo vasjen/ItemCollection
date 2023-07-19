@@ -1,16 +1,17 @@
 using System.Linq.Expressions;
 using Common.Core.Entities;
 using Common.EFCore;
+using Common.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace Common.Repositories
 {
-    public class ItemsRepository<T> : IRepository<T> where T: class,IEntity
+    public class FieldsRepository<T> : IFieldRepository<T> where T: Field
      {
         private readonly AppDbContext _context;
 
-        public ItemsRepository(AppDbContext context)
+        public FieldsRepository(AppDbContext context)
         {
             _context = context;
         }
@@ -23,7 +24,7 @@ namespace Common.Repositories
         public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter) 
             =>  await _context.Set<T>().AsNoTracking().Where(filter).ToListAsync();
     
-        public async Task<T> GetByIdAsync(Guid id)
+        public async Task<T> GetByIdAsync(long id)
             => await _context.Set<T>().AsNoTracking().Where(p => p.Id == id).SingleAsync();
 
         public async Task CreateAsync(T entity)
@@ -35,24 +36,7 @@ namespace Common.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveAsync(Guid id)
-        {
-            var entity = await _context.Set<T>().AsNoTracking().Where(p => p.Id == id).SingleAsync();;
-            if (entity == null)
-                throw new NullReferenceException ($"{nameof(entity)} cann't be a null");
-
-            _context.Set<T>().Remove(entity);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Guid id)
-        {
-            var entity = await _context.Set<T>().AsNoTracking().Where(p => p.Id == id).SingleAsync();;
-            if (entity == null)
-                throw new NullReferenceException ($"{nameof(entity)} cann't be a null");
-
-            _context.Set<T>().Update(entity);
-            await _context.SaveChangesAsync();
-        }
+       
+     
     }
 }

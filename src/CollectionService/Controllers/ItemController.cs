@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CollectionService.Data;
-using CollectionService.Models;
-using CollectionService.Repositories;
 using CollectionService.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Common.Models;
+using Common.Repositories;
 
 namespace CollectionService.Controllers
 {

@@ -1,0 +1,167 @@
+﻿@page 
+@model CreateModel
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+@{
+    ViewData["Title"] = "Create";
+    Layout = "_LayoutApp";
+}
+
+  
+<div class="container-fluid py-4">
+  <form method="post" role="form" id="mainForm">
+     <div class="row mb-4">
+        <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
+          <div class="card">
+            <div class="card-header pb-0">
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <h6>Create a new collection</h6>
+                </div>
+              </div>
+            </div>
+            <div class="card-body px-0 pb-2 d-flex px-2">
+             <div class="container">
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="mb-2">
+                      <label for="CollectionName" class="form-label">Collection Name</label>
+                      <input type="text" class="form-control" id="CollectionName" placeholder="Name of your collection" name="CollectionName" required>
+                    </div>
+                    <div class="mb-2">
+                      <label for="CollectionName" class="form-label">Select theme of collection</label>
+                     <select name="ThemeId" asp-items="Model.Options" required></select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="Description" class="form-label">Description of your collection</label>
+                      <textarea class="form-control border" id="Description" rows="3" name="Description" required></textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-4 align-items-stretch">
+                    <div class="card" >
+                      <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                       Add custom fields
+                      </button>
+                     <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Type</th>
+                      <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="formContainer">
+                    
+                  </tbody>
+                </table>
+                  </div>
+                  </div>
+                  </div>
+                </div>
+              <div class="input-group">
+                    <input type="text" class="form-control inputFileVisible" placeholder="Add cover to your collection">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-fab btn-round btn-primary">
+                            <i class="material-icons">attach_file</i>
+                        </button>
+                    </span>
+                </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+           </div>
+          </div>
+        </div>
+    </div>
+  </form>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Additional fields</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-3 col-lg-10">
+          <select class="form-select form-select-lg mb-2 col-md-4" id="fieldType" aria-label=".form-select-lg example">
+            <option value="1" selected>Integer</option>
+            <option value="2">String</option>
+            <option value="3">Text</option>
+            <option value="4">Bool</option>
+            <option value="5">Date</option>
+          </select>
+         <input type="text" class="form-control form-select-lg mb-2 col-md-6" id="fieldName" placeholder="Name of creation field" aria-label="Name of creation field" aria-describedby="button-addon2">
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="addFieldButton">Add</button>
+      </div>
+    </div>
+                        
+  </div>
+</div>
+<script>
+  document.getElementById("addFieldButton").addEventListener("click", function() {
+    const fieldTypeValue = document.getElementById("fieldType").value;
+    const fieldNameValue = document.getElementById("fieldName").value;
+    const newElement = document.createElement("div");
+    newElement.className = "form-group";
+    
+    newElement.innerHTML = `
+        <tr >
+                        <td>
+                          <select id="disabledSelect" class="form-select text-dark text-sm font-weight-bold mb-0" name="fieldType" required>
+                             <option value="${fieldTypeValue}" selected>${getFieldTypeText(fieldTypeValue)}</option>
+                          </select>
+                        </td>
+                        <td>
+                           <input type="text" id="disabledTextInput" class="form-control text-secondary font-weight-bold text-xs mt-1 mb-0 border-bottom" placeholder="Disabled input" name="fieldName" value="${fieldNameValue}" required>
+                        </td>
+                        <td>
+                          <div class="col-lg-6 col-5 my-auto text-end">
+                            <div class="dropdown float-lg-end">
+                              <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v text-secondary"></i>
+                              </a>
+                              <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                                <li><a class="dropdown-item border-radius-md" href="javascript:;">Remove</a></li>
+                                <li><a class="dropdown-item border-radius-md" href="javascript:;">Duplicate</a></li>
+                              </ul>
+                            </div>
+                          </div>
+                        </td>
+                      
+                    </tr>
+     `;
+    const formContainer = document.getElementById("formContainer");
+    const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+    formContainer.appendChild(newElement).then();
+    modal.hide();
+   
+    function getFieldTypeText(value) {
+    switch (value) {
+      case "1":
+        return "Integer";
+      case "2":
+        return "String";
+      case "3":
+        return "Text";
+      case "4":
+        return "Bool";
+      case "5":
+        return "Date";
+      default:
+        return "";
+    }
+  }
+  });
+</script>
+
+  
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+  

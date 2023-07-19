@@ -1,6 +1,8 @@
 
 
-using CollectionService.Models;
+
+
+using Common.Models;
 
 namespace CollectionService.Extensions
 {
@@ -13,16 +15,13 @@ namespace CollectionService.Extensions
         public static CollectionDto AsDto(this Collection collection)
         {
             var items = collection.Items.ToList();
-            return new CollectionDto(collection.Id, collection.Name, collection.Description, items.Select(p => p.AsDto()), collection.Theme.ToString(), collection.CreatedTime);
+            return new CollectionDto(collection.Id, collection.Name, collection.Description, collection.Theme, collection.CreatedTime, collection.ApplicationUserId);
         }
         public static UserDto AsDto(this ApplicationUser user)
         {
             return new UserDto(user.Id.ToString(), user.UserName);
         }
-        public static CommentDto AsDto(this Comment comment)
-        {
-            return new CommentDto(comment.Name, comment.CreatedTime, comment.User?.UserName!);
-        }
+       
     
     }
 }

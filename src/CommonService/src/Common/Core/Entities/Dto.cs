@@ -9,8 +9,8 @@ namespace Common.Core.Entities
     public record UpdateItemDto([Required] string NameItem, List<string> Tags);
 
     public record CollectionDto(Guid Id, string NameCollection, string Description, IEnumerable<ItemDto> Items,string Theme, DateTimeOffset CreatedTimea);
-    public record CreateCollectionDto([Required]string NameCollection,[Required] string Description, Theme Theme, IEnumerable<ItemDto> Items);
-    public record UpdateCollectionDto([Required]string NameCollection,[Required] string Description, Theme Theme, IEnumerable<ItemDto> Items);
+    public record CreateCollectionDto([Required]string NameCollection,[Required] string Description, Theme Theme, Guid ApplicationUserId, Dictionary<int,string> fields);
+    public record UpdateCollectionDto([Required]string NameCollection,[Required] string Description, Theme Theme, Guid ApplicationUserId);
 
     public record CommentDto(string CommentText, DateTimeOffset AddedDate, string Author);
     public record CreateCommentDto(string CommentText);
