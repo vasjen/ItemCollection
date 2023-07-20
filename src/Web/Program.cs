@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.IdentityModel.Tokens;
 using Web.Data;
 using static IdentityModel.OidcConstants;
@@ -25,6 +26,8 @@ builder.Services.AddHttpClient("CollectionService", httpClient =>
     httpClient.BaseAddress = new Uri(builder.Configuration["CollectionService"]);
     
 });
+builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo("/app/DataProtection-Keys"));  
 builder.Services.AddAuthentication(config =>
 {
     config.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -38,8 +41,9 @@ builder.Services.AddAuthentication(config =>
     })
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, config =>
     {
+
         
-        config.Authority = "https://localhost:7195";
+        config.Authority = builder.Configuration["Identity"];
         config.ClientId = "client_web_id";
         config.ClientSecret = "client_secret_web";
         config.SaveTokens = true;

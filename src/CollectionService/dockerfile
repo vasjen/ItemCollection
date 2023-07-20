@@ -7,21 +7,25 @@ COPY ./src/CollectionService/CollectionService.csproj ./CollectionService/
 
 COPY ./src/CommonService/src/Common ./CommonService/src/Common/
 COPY ./src/CollectionService  ./CollectionService/
-ENV ASPNETCORE_ENVIRONMENT=Development
 
 
 RUN ls
 WORKDIR /CollectionService
 RUN dotnet restore
-RUN dotnet build  -c Release --no-restore ./CollectionService.csproj
-RUN dotnet publish -c Release --no-build -o out
+RUN dotnet build  -c Development --no-restore ./CollectionService.csproj
+RUN dotnet publish --no-build -o out --configuration Development
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 
 # Setup working directory for the project
 WORKDIR /
-COPY --from=build /CollectionService/out  .
+COPY --from=build /Web/out  .
 
+ENV ASPNETCORE_URLS https://*:443, http://*:80
+ENV ASPNETCORE_ENVIRONMENT Development
+
+EXPOSE 80
+EXPOSE 443
 
 ENTRYPOINT ["dotnet", "CollectionService.dll"]
 

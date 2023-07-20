@@ -7,21 +7,25 @@ COPY ./src/ApiGateway/ApiGateway.csproj ./ApiGateway/
 
 COPY ./src/CommonService/src/Common ./CommonService/src/Common/
 COPY ./src/ApiGateway  ./ApiGateway/
-ENV ASPNETCORE_ENVIRONMENT=Development
 
 
 RUN ls
 WORKDIR /ApiGateway
 RUN dotnet restore
-RUN dotnet build  -c Release --no-restore ./ApiGateway.csproj
-RUN dotnet publish -c Release --no-build -o out
+RUN dotnet build  -c Development --no-restore ./ApiGateway.csproj
+RUN dotnet publish --no-build -o out --configuration Development
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 
 # Setup working directory for the project
 WORKDIR /
-COPY --from=build /ApiGateway/out  .
+COPY --from=build /Web/out  .
 
+ENV ASPNETCORE_URLS https://*:443, http://*:80
+ENV ASPNETCORE_ENVIRONMENT Development
+
+EXPOSE 80
+EXPOSE 443
 
 ENTRYPOINT ["dotnet", "ApiGateway.dll"]
 

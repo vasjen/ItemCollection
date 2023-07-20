@@ -30,7 +30,7 @@ public class SignupModel : PageModel
         };
         var content = new FormUrlEncodedContent(user);
 
-        var response =  httpClient.PostAsync("https://localhost:7195/user/create", content).GetAwaiter().GetResult();
+        var response =  httpClient.PostAsync("identity/user/create", content).GetAwaiter().GetResult();
         if (response.IsSuccessStatusCode)
         {
             return Redirect("Index");

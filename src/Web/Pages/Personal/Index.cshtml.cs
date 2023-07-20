@@ -13,17 +13,19 @@ public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
+    private string identityUrl;
 
-    public IndexModel(ILogger<IndexModel> logger, IHttpClientFactory httpClientFactory)
+    public IndexModel(ILogger<IndexModel> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
+        identityUrl = configuration.GetValue<string>("Identity");
     }
     
     public async Task OnGetAsync()
     {
        var authClient = _httpClientFactory.CreateClient();
-       var disco = await authClient.GetDiscoveryDocumentAsync("https://localhost:7195");
+       var disco = await authClient.GetDiscoveryDocumentAsync(identityUrl);
        
           var tokenRespone = authClient.RequestClientCredentialsTokenAsync(
            new ClientCredentialsTokenRequest
@@ -38,7 +40,7 @@ public class IndexModel : PageModel
       itemClient.SetBearerToken(tokenRespone.AccessToken);  
       var id = HttpContext.User.Claims.Where(p => p.Type == "sub").Select(p => p.Value).First();
      
-      var response = await itemClient.GetAsync($"http://localhost:5254/Collection/GetAllUser/{id}");
+      var response = await itemClient.GetAsync($"Collection/GetAllUser/{id}");
        System.Console.WriteLine(response.StatusCode);
        if (!response.IsSuccessStatusCode)
            ViewData["Message"] = response.StatusCode;

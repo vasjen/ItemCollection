@@ -12,15 +12,20 @@ COPY ./src/Identity  ./Identity/
 RUN ls
 WORKDIR /Identity
 RUN dotnet restore
-RUN dotnet build  -c Release --no-restore ./Identity.csproj
-RUN dotnet publish -c Release --no-build -o out
+RUN dotnet build  -c Development --no-restore ./Identity.csproj
+RUN dotnet publish --no-build -o out --configuration Development
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 
 # Setup working directory for the project
 WORKDIR /
-COPY --from=build /Identity/out  .
+COPY --from=build /Web/out  .
 
+ENV ASPNETCORE_URLS https://*:443, http://*:80
+ENV ASPNETCORE_ENVIRONMENT Development
+
+EXPOSE 80
+EXPOSE 443
 
 ENTRYPOINT ["dotnet", "Identity.dll"]
 

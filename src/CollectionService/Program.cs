@@ -4,6 +4,7 @@ using CollectionService.Extensions;
 using CollectionService;
 using Common.Repositories;
 using Common.EFCore;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ builder.Services.AddCustomAuth();
 builder.Services.AddScoped(typeof(IFieldRepository<>),typeof(FieldsRepository<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(ItemsRepository<>));
 builder.Services.AddScoped<FieldCreationService>();
+builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo("/app/DataProtection-Keys"));  
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

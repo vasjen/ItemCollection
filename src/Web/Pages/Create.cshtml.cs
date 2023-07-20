@@ -15,8 +15,9 @@ public class CreateModel : PageModel
     private readonly ILogger<CreateModel> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     public List<SelectListItem> Options { get; set ; }
+    private string identityUrl;
 
-    public CreateModel(ILogger<CreateModel> logger, IHttpClientFactory httpClientFactory)
+    public CreateModel(ILogger<CreateModel> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
@@ -28,6 +29,7 @@ public class CreateModel : PageModel
                         Value = ((int)v).ToString()
         }).ToList(); 
         
+        identityUrl = configuration.GetValue<string>("Identity");
     }
 
    
@@ -42,7 +44,7 @@ public class CreateModel : PageModel
     public async Task OnPostAsync()
     {
          var authClient = _httpClientFactory.CreateClient();
-       var disco = await authClient.GetDiscoveryDocumentAsync("https://localhost:7195");
+       var disco = await authClient.GetDiscoveryDocumentAsync(identityUrl);
        
           var tokenRespone = authClient.RequestClientCredentialsTokenAsync(
            new ClientCredentialsTokenRequest
@@ -80,7 +82,7 @@ public class CreateModel : PageModel
         var jsonContent = JsonSerializer.Serialize(collection);
         itemClient.DefaultRequestHeaders.Accept.Clear();
         itemClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        var responseCreated = await itemClient.PostAsync("https://localhost:7202/Collection",new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+        var responseCreated = await itemClient.PostAsync("collection",new StringContent(jsonContent, Encoding.UTF8, "application/json"));
         var result = await responseCreated.Content.ReadAsStringAsync();
         System.Console.WriteLine("\n\n\n"+result+"\n\n\n");
         foreach (var item in request)

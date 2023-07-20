@@ -38,8 +38,8 @@ namespace Identity
                         IdentityServerConstants.StandardScopes.Profile
                     },
                     RequireConsent = false,
-                    RedirectUris = {"http://localhost:5026/signin-oidc"},
-                    PostLogoutRedirectUris = { "http://localhost:5026/signout-callback-oidc" },
+                    RedirectUris = {"http://web:80/signin-oidc"},
+                    PostLogoutRedirectUris = { "http://web:80/signout-callback-oidc" },
                     AlwaysIncludeUserClaimsInIdToken = true,
                     AlwaysSendClientClaims = true,
                     
