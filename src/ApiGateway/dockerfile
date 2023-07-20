@@ -1,0 +1,27 @@
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+
+WORKDIR /
+COPY ./src/CommonService/src/Common/Common.csproj ./CommonService/src/Common/
+COPY ./src/ApiGateway/ApiGateway.csproj ./ApiGateway/
+
+
+COPY ./src/CommonService/src/Common ./CommonService/src/Common/
+COPY ./src/ApiGateway  ./ApiGateway/
+ENV ASPNETCORE_ENVIRONMENT=Development
+
+
+RUN ls
+WORKDIR /ApiGateway
+RUN dotnet restore
+RUN dotnet build  -c Release --no-restore ./ApiGateway.csproj
+RUN dotnet publish -c Release --no-build -o out
+
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+
+# Setup working directory for the project
+WORKDIR /
+COPY --from=build /ApiGateway/out  .
+
+
+ENTRYPOINT ["dotnet", "ApiGateway.dll"]
+

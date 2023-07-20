@@ -1,0 +1,27 @@
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+
+WORKDIR /
+COPY ./src/CommonService/src/Common/Common.csproj ./CommonService/src/Common/
+COPY ./src/CollectionService/CollectionService.csproj ./CollectionService/
+
+
+COPY ./src/CommonService/src/Common ./CommonService/src/Common/
+COPY ./src/CollectionService  ./CollectionService/
+ENV ASPNETCORE_ENVIRONMENT=Development
+
+
+RUN ls
+WORKDIR /CollectionService
+RUN dotnet restore
+RUN dotnet build  -c Release --no-restore ./CollectionService.csproj
+RUN dotnet publish -c Release --no-build -o out
+
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+
+# Setup working directory for the project
+WORKDIR /
+COPY --from=build /CollectionService/out  .
+
+
+ENTRYPOINT ["dotnet", "CollectionService.dll"]
+
