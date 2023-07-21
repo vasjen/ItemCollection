@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Web.Data;
 using static IdentityModel.OidcConstants;
@@ -18,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AuthorizeFolder("/Personal");
+    options.Conventions.AuthorizeFolder("/Create");
     options.Conventions.AuthorizeFolder("/Admin","admin");
     
 });
@@ -43,11 +45,13 @@ builder.Services.AddAuthentication(config =>
     {
 
         
-        config.Authority = builder.Configuration["Identity"];
+        config.Authority = "http://localhost:10000";
+        
         config.ClientId = "client_web_id";
         config.ClientSecret = "client_secret_web";
         config.SaveTokens = true;
         config.RequireHttpsMetadata = false;
+        config.MetadataAddress = "http://localhost:10000/.well-known/openid-configuration";
 
         config.ResponseType = "code";
         config.GetClaimsFromUserInfoEndpoint = true;
@@ -61,7 +65,7 @@ builder.Services.AddAuthorization(options =>
         options.AddPolicy("admin", policy =>
             policy.RequireClaim(ClaimTypes.Role, "Administrator"));
     });
-
+IdentityModelEventSource.ShowPII = true;
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

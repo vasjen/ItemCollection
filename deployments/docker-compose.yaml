@@ -6,12 +6,10 @@ services:
       dockerfile: src/Web/Dockerfile
     ports:
       - 9000:80
-      - 9001:80
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_URLS=http://+
       - ASPNETCORE_HTTP_PORT=9000
-      - ASPNETCORE_HTTPS_PORT=9001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=password
     networks:
       - network
@@ -22,12 +20,10 @@ services:
       dockerfile: src/CollectionService/Dockerfile
     ports:
       - 5000:80
-      - 5001:443
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_URLS=http://+
       - ASPNETCORE_HTTP_PORT=5000
-      - ASPNETCORE_HTTPS_PORT=5001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=password
     networks:
       - network
@@ -38,12 +34,10 @@ services:
       dockerfile: src/ApiGateway/Dockerfile
     ports:
       - 4000:80
-      - 4001:443
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_URLS=http://+
       - ASPNETCORE_HTTP_PORT=4000
-      - ASPNETCORE_HTTPS_PORT=4001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=password
     networks:
       - network
@@ -54,14 +48,12 @@ services:
       dockerfile: src/Identity/Dockerfile
     ports:
       - 10000:80
-      - 10001:443
     depends_on:
       - db
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_URLS=http://+
       - ASPNETCORE_HTTP_PORT=10000
-      - ASPNETCORE_HTTPS_PORT=10001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=password
     networks:
       - network
