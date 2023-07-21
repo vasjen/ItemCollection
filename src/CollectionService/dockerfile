@@ -19,7 +19,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0
 
 # Setup working directory for the project
 WORKDIR /
-COPY --from=build /Web/out  .
+COPY --from=build /CollectionService/out  .
 
 ENV ASPNETCORE_URLS https://*:443, http://*:80
 ENV ASPNETCORE_ENVIRONMENT Development
