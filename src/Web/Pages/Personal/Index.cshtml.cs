@@ -19,13 +19,12 @@ public class IndexModel : PageModel
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
-        identityUrl = configuration.GetValue<string>("Identity");
     }
     
     public async Task OnGetAsync()
     {
        var authClient = _httpClientFactory.CreateClient("CollectionService");
-       var disco = await authClient.GetDiscoveryDocumentAsync("http://localhost:1000/");
+       var disco = await authClient.GetDiscoveryDocumentAsync("http://identity/");
        
           var tokenRespone = authClient.RequestClientCredentialsTokenAsync(
            new ClientCredentialsTokenRequest

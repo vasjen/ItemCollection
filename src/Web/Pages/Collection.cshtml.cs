@@ -27,7 +27,7 @@ public class CollectionModel : PageModel
         _logger.LogInformation($"{id}");
         
         var httpClient = _httpClientFactory.CreateClient("CollectionService");
-        var disco = await httpClient.GetDiscoveryDocumentAsync("https://localhost:7195");
+        var disco = await httpClient.GetDiscoveryDocumentAsync("http://gateway/identity");
        
           var tokenRespone = httpClient.RequestClientCredentialsTokenAsync(
            new ClientCredentialsTokenRequest
@@ -39,7 +39,7 @@ public class CollectionModel : PageModel
            } 
        ).GetAwaiter().GetResult();
        httpClient.SetBearerToken(tokenRespone.AccessToken);
-        var response = await httpClient.GetAsync($"collection/collection/{id}");
+        var response = await httpClient.GetAsync($"http://gateway/collection/collection/{id}");
         if (response.IsSuccessStatusCode)
         {
             Collection = await response.Content.ReadFromJsonAsync<Collection>();

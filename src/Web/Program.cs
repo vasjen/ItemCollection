@@ -27,7 +27,7 @@ builder.Services.AddRazorPages(options =>
 builder.Services.AddSignalR();  
 builder.Services.AddHttpClient("CollectionService", httpClient =>
 {
-    httpClient.BaseAddress = new Uri("http://localhost:5038");
+    httpClient.BaseAddress = new Uri("http://gateway");
     
 });
 builder.Services.AddAuthentication(config =>
@@ -45,13 +45,13 @@ builder.Services.AddAuthentication(config =>
     {
 
         
-        config.Authority = "https://localhost:7195";
+        config.Authority = "https://identity";
         
         config.ClientId = "client_web_id";
         config.ClientSecret = "client_secret_web";
         config.SaveTokens = true;
         config.RequireHttpsMetadata = false;
-        config.MetadataAddress = "https://localhost:7195/.well-known/openid-configuration";
+        config.MetadataAddress = "https://identity/.well-known/openid-configuration";
 
         config.ResponseType = "code";
         config.GetClaimsFromUserInfoEndpoint = true;

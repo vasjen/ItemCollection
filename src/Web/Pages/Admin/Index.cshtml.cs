@@ -22,7 +22,7 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
         var authClient = _httpClientFactory.CreateClient("CollectionService");
-        var disco = await authClient.GetDiscoveryDocumentAsync("https://localhost:7195");
+        var disco = await authClient.GetDiscoveryDocumentAsync("http://identity");
        
           var tokenRespone = authClient.RequestClientCredentialsTokenAsync(
            new ClientCredentialsTokenRequest

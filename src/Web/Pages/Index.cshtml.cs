@@ -10,7 +10,7 @@ public class IndexModel : PageModel
     private readonly ILogger<IndexModel> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public IEnumerable<Collection>? Collections {get;set;}
+    public IEnumerable<Collection?>? Collections {get;set;}
     public IEnumerable<Item?>? Items {get;set;}
     public IEnumerable<Comment?>? Comments {get;set;}
 
@@ -23,7 +23,7 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
        var authClient = _httpClientFactory.CreateClient("CollectionService");
-       var disco = await authClient.GetDiscoveryDocumentAsync("https://localhost:7195");
+       var disco = await authClient.GetDiscoveryDocumentAsync("http://gateway/identity");
        
           var tokenRespone = authClient.RequestClientCredentialsTokenAsync(
            new ClientCredentialsTokenRequest

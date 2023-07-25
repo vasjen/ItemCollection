@@ -44,7 +44,7 @@ public class CreateModel : PageModel
     public async Task OnPostAsync()
     {
          var authClient = _httpClientFactory.CreateClient("CollectionService");
-       var disco = await authClient.GetDiscoveryDocumentAsync(identityUrl);
+       var disco = await authClient.GetDiscoveryDocumentAsync("http:/gateway/identity");
        
           var tokenRespone = authClient.RequestClientCredentialsTokenAsync(
            new ClientCredentialsTokenRequest
@@ -79,7 +79,7 @@ public class CreateModel : PageModel
        var jsonContent = JsonSerializer.Serialize(collection);
        itemClient.DefaultRequestHeaders.Accept.Clear();
        itemClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-       var responseCreated = await itemClient.PostAsync("collection",new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+       var responseCreated = await itemClient.PostAsync("collection/collection",new StringContent(jsonContent, Encoding.UTF8, "application/json"));
        var result = await responseCreated.Content.ReadAsStringAsync();
        System.Console.WriteLine("\n\n\n"+result+"\n\n\n");
        
