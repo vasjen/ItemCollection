@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text;
-using Common.Models;
+using Common.Core.Entities;
+using Common.SignalR.Hubs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,13 +24,12 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AuthorizeFolder("/Admin","admin");
     
 });
+builder.Services.AddSignalR();  
 builder.Services.AddHttpClient("CollectionService", httpClient =>
 {
-    httpClient.BaseAddress = new Uri(builder.Configuration["CollectionService"]);
+    httpClient.BaseAddress = new Uri("http://localhost:5038");
     
 });
-builder.Services.AddDataProtection()
-            .PersistKeysToFileSystem(new DirectoryInfo("/app/DataProtection-Keys"));  
 builder.Services.AddAuthentication(config =>
 {
     config.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -45,13 +45,13 @@ builder.Services.AddAuthentication(config =>
     {
 
         
-        config.Authority = "http://localhost:10000";
+        config.Authority = "https://localhost:7195";
         
         config.ClientId = "client_web_id";
         config.ClientSecret = "client_secret_web";
         config.SaveTokens = true;
         config.RequireHttpsMetadata = false;
-        config.MetadataAddress = "http://localhost:10000/.well-known/openid-configuration";
+        config.MetadataAddress = "https://localhost:7195/.well-known/openid-configuration";
 
         config.ResponseType = "code";
         config.GetClaimsFromUserInfoEndpoint = true;
@@ -89,4 +89,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.UseEndpoints(endpoints =>
+            {   
+                endpoints.MapHub<MessageHub>("/messageHub");
+            });
 app.Run();

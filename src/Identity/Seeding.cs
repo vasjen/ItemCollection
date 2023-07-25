@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Common.Models;
+using Common.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Identity

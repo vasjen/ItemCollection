@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CollectionService.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using Common.Models;
 using Common.Repositories;
+using Common.Core.Entities;
 
 namespace CollectionService.Controllers
 {
@@ -12,21 +12,26 @@ namespace CollectionService.Controllers
     public class ItemController : ControllerBase
     {
         private readonly IRepository<Item> _itemsRepository;
-        private readonly IRepository<Tag> _tagsRepository;
+        private readonly IRepository<Comment> _commentsRepository;
         // private readonly IUsersRepository<ApplicationUser> _usersRepository;
 
-        public ItemController(IRepository<Item> itemsRepository, IRepository<Tag> tagsRepository)
+        public ItemController(IRepository<Item> itemsRepository, IRepository<Comment> commentsRepository)
         {
             _itemsRepository = itemsRepository;
-            _tagsRepository = tagsRepository;
-            // _usersRepository = usersRepository;
+            _commentsRepository = commentsRepository;
         }
-        [Authorize]
+        
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IEnumerable<Item>> GetAsync()
         {
           var result = await _itemsRepository.GetAllAsync();
-            return Ok(result.Select(p => p.AsDto()));
+            return  result;
+        }
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<Comment>> GetComents()
+        {
+          var result = await _commentsRepository.GetAllAsync();
+            return  result;
         }
 
         [HttpGet("{id}")]
@@ -40,7 +45,6 @@ namespace CollectionService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> CreateAsync(CreateItemDto createItemDto)
         {
            // 

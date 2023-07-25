@@ -3,7 +3,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace  Common.Models
+namespace  Common.Core.Entities
 {
     public class Fields
     {

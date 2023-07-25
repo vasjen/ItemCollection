@@ -5,10 +5,15 @@ using CollectionService;
 using Common.Repositories;
 using Common.EFCore;
 using Microsoft.AspNetCore.DataProtection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+.AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>();
@@ -17,8 +22,6 @@ builder.Services.AddCustomAuth();
 builder.Services.AddScoped(typeof(IFieldRepository<>),typeof(FieldsRepository<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(ItemsRepository<>));
 builder.Services.AddScoped<FieldCreationService>();
-builder.Services.AddDataProtection()
-            .PersistKeysToFileSystem(new DirectoryInfo("/app/DataProtection-Keys"));  
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,6 +1,6 @@
 using Common.Core.Entities;
 
-namespace  Common.Models
+namespace  Common.Core.Entities
 {
     public class Tag : IEntity
     {

@@ -43,7 +43,7 @@ public class CreateModel : PageModel
 
     public async Task OnPostAsync()
     {
-         var authClient = _httpClientFactory.CreateClient();
+         var authClient = _httpClientFactory.CreateClient("CollectionService");
        var disco = await authClient.GetDiscoveryDocumentAsync(identityUrl);
        
           var tokenRespone = authClient.RequestClientCredentialsTokenAsync(
@@ -57,17 +57,14 @@ public class CreateModel : PageModel
        ).GetAwaiter().GetResult();
         var id = HttpContext.User.Claims.Where(p => p.Type == "sub").Select(p => p.Value).First();
         var request = HttpContext.Request.Form;
-        var keys = request.Where(p => p.Key == "fieldType").First().Value.First().Split(',');
-        var values = request.Where(p => p.Key == "fieldName").First().Value.First().Split(',');
-       // var values = request.Where(p => p.Key == "fieldName");
-        var fields = new Dictionary<int,string>();
+        var keys = request["fieldName"].ToString().Split(',');
+        var values = request["fieldType"].ToString().Split(',');
+        var fields = new Dictionary<string,int>();
         for (int i = 0; i < keys.Count(); i++)
         {
-           fields.Add(int.Parse(keys[i]),values[i]);        
-            //System.Console.WriteLine("Key: {0}, value: {1}", keys.ElementAt(i).Value, values.ElementAt(i).Value);
+          fields.Add(keys[i],int.Parse(values[i]));        
         }
-        System.Console.WriteLine("Keys cout: {0}, keys: {1}", keys.Count(), keys);
-        var itemClient = _httpClientFactory.CreateClient(); 
+        var itemClient = _httpClientFactory.CreateClient("CollectionService"); 
       itemClient.SetBearerToken(tokenRespone.AccessToken);  
      
       var collection = new CreateCollectionDto(request["CollectionName"],request["Description"], Theme.Autographs, Guid.Parse(id), fields);
@@ -76,21 +73,19 @@ public class CreateModel : PageModel
         JsonSerializerOptions options = new JsonSerializerOptions
 {
     ReferenceHandler = ReferenceHandler.Preserve,
-    WriteIndented = true // Опционально, для форматирования JSON с отступами
+    WriteIndented = true 
 };
        
-        var jsonContent = JsonSerializer.Serialize(collection);
-        itemClient.DefaultRequestHeaders.Accept.Clear();
-        itemClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        var responseCreated = await itemClient.PostAsync("collection",new StringContent(jsonContent, Encoding.UTF8, "application/json"));
-        var result = await responseCreated.Content.ReadAsStringAsync();
-        System.Console.WriteLine("\n\n\n"+result+"\n\n\n");
-        foreach (var item in request)
-        {
-            System.Console.WriteLine(item.Key + " - " + item.Value);
-            
-        }
-        
+       var jsonContent = JsonSerializer.Serialize(collection);
+       itemClient.DefaultRequestHeaders.Accept.Clear();
+       itemClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+       var responseCreated = await itemClient.PostAsync("collection",new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+       var result = await responseCreated.Content.ReadAsStringAsync();
+       System.Console.WriteLine("\n\n\n"+result+"\n\n\n");
+       
+       if (responseCreated.IsSuccessStatusCode)
+        RedirectToPage($"Collection/{result}");
+       
     }
 }
 

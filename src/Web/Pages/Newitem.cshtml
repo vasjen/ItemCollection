@@ -1,0 +1,157 @@
+﻿@page "{id}"
+@model NewItemModel
+@{
+    ViewData["Title"] = "Collection";
+    Layout = "_LayoutApp";
+}
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<div class="container-fluid py-4">
+      <div class="row mb-4">
+        <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+          <div class="card">
+            <div class="card-header pb-0">
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <h6>Property of item</h6>
+                  <td>
+                    <div class="d-flex px-2 py-1 align-items-left justify-content-left">
+                      <div class="d-flex flex-column justify-content-center">
+                        <label class="mb-0 text-sm">Name:</label>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                      <div class="d-flex align-items-center">
+                          <input type="text" class="form-control border-bottom" placeholder="Item name" aria-label="ItemName" aria-describedby="basic-addon1" >
+                      </div>
+                  </td>
+                </div>
+                <div class="col-lg-6 col-5 my-auto text-end">
+                  <div class="dropdown float-lg-end pe-4">
+                    <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v text-secondary"></i>
+                    </a>
+                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name of property</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach (var item in Model.Fields.FieldBool)
+                    {
+                      <tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">@item.Name</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <input type="checkbox" class="form-control border-bottom" placeholder="@item.Name value" aria-label="ItemValue" aria-describedby="basic-addon1" >
+                      </td>
+                    </tr>
+                    }
+                     @foreach (var item in Model.Fields.FieldDate)
+                    {
+                      <tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">@item.Name</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <input type="date" class="form-control border-bottom" placeholder="@item.Name value" aria-label="ItemValue" aria-describedby="basic-addon1" >
+                      </td>
+                    </tr>
+                    }
+                     @foreach (var item in Model.Fields.FieldInt)
+                    {
+                      <tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">@item.Name</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <input type="number" class="form-control border-bottom" placeholder="@item.Name value" aria-label="ItemValue" aria-describedby="basic-addon1" >
+                      </td>
+                    </tr>
+                    }
+                     @foreach (var item in Model.Fields.FieldString)
+                    {
+                      <tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">@item.Name</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <input type="text" class="form-control border-bottom" placeholder="@item.Name value" aria-label="ItemValue" aria-describedby="basic-addon1" >
+                      </td>
+                    </tr>
+                    }
+                     @foreach (var item in Model.Fields.FieldText)
+                    {
+                      <tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">@item.Name</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <input type="text" class="form-control border-bottom" placeholder="@item.Name value" aria-label="ItemValue" aria-describedby="basic-addon1" >
+                      </td>
+                    </tr>
+                    }
+                   
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="card h-100">
+            <div class="card-header pb-0">
+              <h6>Adv banner </h6>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>

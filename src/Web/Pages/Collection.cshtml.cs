@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Common.Core.Entities;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -9,7 +10,7 @@ public class CollectionModel : PageModel
 {
     private readonly ILogger<CollectionModel> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
-    public IEnumerable<ItemDto> Items {get;set;}
+    public Collection Collection {get;set;}
 
     public CollectionModel(ILogger<CollectionModel> logger, IHttpClientFactory httpClientFactory)
     {
@@ -26,16 +27,31 @@ public class CollectionModel : PageModel
         _logger.LogInformation($"{id}");
         
         var httpClient = _httpClientFactory.CreateClient("CollectionService");
-        var response = await httpClient.GetAsync($"collections/{id}");
-        if (!response.IsSuccessStatusCode)
+        var disco = await httpClient.GetDiscoveryDocumentAsync("https://localhost:7195");
+       
+          var tokenRespone = httpClient.RequestClientCredentialsTokenAsync(
+           new ClientCredentialsTokenRequest
+           {
+               Address = disco.TokenEndpoint,
+               ClientId = "client_id",
+               ClientSecret = "client_secret",
+               Scope = "CollectionApi"
+           } 
+       ).GetAwaiter().GetResult();
+       httpClient.SetBearerToken(tokenRespone.AccessToken);
+        var response = await httpClient.GetAsync($"collection/collection/{id}");
+        if (response.IsSuccessStatusCode)
         {
-            System.Console.WriteLine(response.StatusCode);
+            Collection = await response.Content.ReadFromJsonAsync<Collection>();
         }
-        var collection = response.Content.ReadAsStringAsync();
+        var collection = await response.Content.ReadAsStringAsync();
         System.Console.WriteLine(collection);
 
 
     return Page();
+
 }
+
+    
 }
 

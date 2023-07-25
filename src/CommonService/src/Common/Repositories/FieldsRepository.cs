@@ -1,7 +1,6 @@
 using System.Linq.Expressions;
 using Common.Core.Entities;
 using Common.EFCore;
-using Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

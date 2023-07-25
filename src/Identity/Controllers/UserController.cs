@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Common.Models;
+using Common.Core.Entities;
 using Common.Repositories;
 using Common.Core.Entities.Authentication;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Services;
 
 namespace Identity.Controllers
 {
@@ -17,11 +18,13 @@ namespace Identity.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UserController> _logger;
+        private readonly IIdentityServerInteractionService _interactionService;
 
-        public UserController(UserManager<ApplicationUser> userManager, ILogger<UserController> logger)
+        public UserController(UserManager<ApplicationUser> userManager, ILogger<UserController> logger, IIdentityServerInteractionService interactionService)
         {
             _userManager = userManager;
             _logger = logger;
+            _interactionService = interactionService;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
@@ -29,16 +32,7 @@ namespace Identity.Controllers
             return Ok(await _userManager.Users.ToListAsync());
                 
         }
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<IActionResult> Claims(string user)
-        {
-            var User = await _userManager.FindByNameAsync(user);
-            var claims = await _userManager.GetClaimsAsync(User);
-            return Ok(claims);
-                
-        }
-
+        
         [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> Create([FromForm]User User)
@@ -69,55 +63,60 @@ namespace Identity.Controllers
                 }, User.Password
             );
             user = await _userManager.FindByNameAsync(User.UserName);
-            await _userManager.AddClaimAsync(user, new Claim (ClaimTypes.Role, "root"));
-            _logger.LogInformation($"Added 'country' claim with value 'root' for user '{user.UserName}'.");
-            var claims = await _userManager.GetClaimsAsync(user);
-            System.Console.WriteLine("TEST");
-            foreach (var item in claims)
-            {
-            _logger.LogInformation(item.Type+" - "+item.Value);
-
-            }
-
-          
             return Ok();
 
         }
-      //  [HttpGet("{id}")]
-      //  public async Task<IActionResult> GetByIdAsync(Guid id)
-      //  {
-      //      var user = await _usersRepository.GetUserAsync(id);
-      //      if (user is null)
-      //          return NotFound();
-      //  
-      //      return Ok(user);  
-      //  }
-      //  
-      //  [HttpGet("{userName}")]
-      //  public async Task<IActionResult> GetByNameAsync(string userName)
-      //  {
-      //      var user = await _usersRepository.GetUserAsync(userName);
-      //      if (user is null)
-      //          return NotFound();
-      //  
-      //      return Ok(user);  
-      //  }
 
-      //  [HttpPost]
-      //  public async Task<IActionResult> CreateAsync([FromForm] User user)
-      //  {
-      //      await _usersRepository.CreateAsync(
-      //          new ApplicationUser() { UserName = user.UserName, Email = user.Email },
-      //          user.Password);
-      //      return Ok(user);
-      //  }
+         [Authorize]
+         [HttpPut("Block")]
+         public async Task<IActionResult> BlockAsync([FromBody] string[] IdList)
+         {
+             foreach (var item in IdList)
+             {
+                 var user = await _userManager.FindByIdAsync($"{item}");
+                 if (user is not null)
+                 {
+                     user.IsActive = false;
+                     await _userManager.UpdateAsync(user);
+                 }
+             }
+             return RedirectToAction("Table","Home");
+         }
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateAsync(Guid id, UpdateItemDto updateItemDto)
-        //{
-        //    await _itemsRepository.UpdateAsync(id);
-        //  return Ok();
-        //}
-    }
+
+         [Authorize]
+         [HttpPut("Activate")]
+         public async Task<IActionResult> ActivateSync([FromBody] string[] IdList)
+         {
+             _logger.LogInformation("\n\n!!!!!!!Get Activate request\n\n");
+             foreach (var item in IdList)
+             {
+                 var user = await _userManager.FindByIdAsync($"{item}");
+                 if (user is not null)
+                 {
+                     user.IsActive = true;
+                     await _userManager.UpdateAsync(user);
+                 }
+             }
+            return RedirectToAction("Table","Home");
+         }
+
+         [Authorize]
+         [HttpDelete("Delete")]
+         public async Task<IActionResult> DeleteAsync([FromBody] string[] IdList)
+         {
+             foreach (var item in IdList)
+             {
+                 var user = await _userManager.FindByIdAsync($"{item}");
+                 if (user is not null)
+                 {
+                    await _interactionService.GetLogoutContextAsync(item);
+                     await _userManager.DeleteAsync(user);
+                 }
+             }
+             return RedirectToAction("Table","Home");
+         }
+          
+       }
 
 }

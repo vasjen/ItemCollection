@@ -1,4 +1,4 @@
-using Common.Models;
+using Common.Core.Entities;
 using Identity;
 using Identity.Data;
 using Microsoft.AspNetCore.DataProtection;
@@ -45,9 +45,7 @@ builder.Services.AddIdentityServer()
 builder.Services.AddControllersWithViews();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDataProtection()
-            .PersistKeysToFileSystem(new DirectoryInfo("/app/DataProtection-Keys"));  
+builder.Services.AddSwaggerGen(); 
 var app = builder.Build();
 
 
@@ -73,6 +71,6 @@ using (var scope = app.Services.CreateScope())
     {
         context.Database.Migrate();
     }
-    
+    //Seeding.Init(services);   
 }
 app.Run();

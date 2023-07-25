@@ -1,6 +1,6 @@
 
 
-using Common.Models;
+using Common.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -25,11 +25,11 @@ namespace Identity.Data
         {
             base.OnModelCreating(modelBuilder);
                 
-            //  modelBuilder.Entity<Comment>()
-            //  .HasOne(c => c.Item)
-            //  .WithMany(i => i.Comments)
-            //  .HasForeignKey(c => c.ItemId)
-            //  .OnDelete(DeleteBehavior.Restrict);
+             modelBuilder.Entity<Comment>()
+             .HasOne(c => c.Item)
+             .WithMany(i => i.Comments)
+             .HasForeignKey(c => c.ItemId)
+             .OnDelete(DeleteBehavior.Restrict);
                         
         }
 }

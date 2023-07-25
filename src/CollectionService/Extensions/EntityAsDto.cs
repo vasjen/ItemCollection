@@ -2,7 +2,7 @@
 
 
 
-using Common.Models;
+using Common.Core.Entities;
 
 namespace CollectionService.Extensions
 {
@@ -10,7 +10,7 @@ namespace CollectionService.Extensions
     {
         public static ItemDto AsDto(this Item item)
         {
-            return new ItemDto(item.Id, item.Name, item.CreatedTime);
+            return new ItemDto(item.Id, item.Name, item.CreatedTime, item.Collection.Name);
         }
         public static CollectionDto AsDto(this Collection collection)
         {

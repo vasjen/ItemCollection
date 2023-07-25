@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Common.Core.Entities;
-using Common.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,6 @@ namespace Common.EFCore
         public DbSet<Comment> Comments {get;set;}
         public DbSet<Tag> Tags {get;set;}
         public DbSet<Fields> Fields {get;set;}
-        // public DbSet<Field> BaseFields {get;set;}
         public DbSet<FieldInt> FieldInt {get;set;}
         public DbSet<FieldString> FieldString {get;set;}
         public DbSet<FieldText> FieldText {get;set;}
@@ -40,14 +38,6 @@ namespace Common.EFCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            //  modelBuilder.Entity<Field>()
-            //.HasDiscriminator<string>("FieldType")
-            //.HasValue<FieldInt>("FieldInt")
-            //.HasValue<FieldString>("FieldString")
-            //.HasValue<FieldText>("FieldText")
-            //.HasValue<FieldBool>("FieldBool")
-            //.HasValue<FieldDate>("FieldDate")
-            //.HasValue<FieldTime>("FieldTime");
 
 
             modelBuilder.Ignore<ApplicationUser>();
@@ -64,15 +54,6 @@ namespace Common.EFCore
 
            
 
-
-
-           
-
-
-            //modelBuilder.Entity<Fields>()
-            //.HasOne(f => f.Collection)
-            //.WithOne(c => c.Fields)
-            //.HasForeignKey<Fields>(f => f.Id); 
 
             
             

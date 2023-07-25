@@ -38,10 +38,11 @@ namespace Identity
                         IdentityServerConstants.StandardScopes.Profile
                     },
                     RequireConsent = false,
-                    RedirectUris = {"http://localhost:9000/signin-oidc"},
-                    PostLogoutRedirectUris = { "http://localhost:9000/signout-callback-oidc" },
+                    RedirectUris = {"http://localhost:5026/signin-oidc"},
+                    PostLogoutRedirectUris = { "http://localhost:5026/signout-callback-oidc" },
                     AlwaysIncludeUserClaimsInIdToken = true,
                     AlwaysSendClientClaims = true,
+                    AllowedCorsOrigins ={"http://localhost:5026"}
                     
                     
                     

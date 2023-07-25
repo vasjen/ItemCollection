@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Common.Models;
+using Common.Core.Entities;
 using Common.Repositories;
 using Common.Core.Entities.Authentication;
 using Microsoft.AspNetCore.Identity;

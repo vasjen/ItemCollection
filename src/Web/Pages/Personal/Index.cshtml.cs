@@ -24,7 +24,7 @@ public class IndexModel : PageModel
     
     public async Task OnGetAsync()
     {
-       var authClient = _httpClientFactory.CreateClient();
+       var authClient = _httpClientFactory.CreateClient("CollectionService");
        var disco = await authClient.GetDiscoveryDocumentAsync("http://localhost:1000/");
        
           var tokenRespone = authClient.RequestClientCredentialsTokenAsync(
@@ -36,11 +36,11 @@ public class IndexModel : PageModel
                Scope = "CollectionApi"
            } 
        ).GetAwaiter().GetResult();
-      var itemClient = _httpClientFactory.CreateClient(); 
+      var itemClient = _httpClientFactory.CreateClient("CollectionService"); 
       itemClient.SetBearerToken(tokenRespone.AccessToken);  
       var id = HttpContext.User.Claims.Where(p => p.Type == "sub").Select(p => p.Value).First();
      
-      var response = await itemClient.GetAsync($"Collection/GetAllUser/{id}");
+      var response = await itemClient.GetAsync($"Collection/Collection/GetAllUser/{id}");
        System.Console.WriteLine(response.StatusCode);
        if (!response.IsSuccessStatusCode)
            ViewData["Message"] = response.StatusCode;
